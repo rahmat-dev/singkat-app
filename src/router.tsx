@@ -1,17 +1,17 @@
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 
-import Header from '~/components/header'
+import MainLayout from '~/components/layout/main-layout'
 import HomePage from '~/pages/home'
 import SignIn from '~/pages/signin'
+import SignUp from '~/pages/signup'
 
 const router = createBrowserRouter([
   {
-    element: <Header />,
-    children: [
-      { path: '/', element: <HomePage /> },
-      { path: '/signin', element: <SignIn /> },
-    ],
+    element: <MainLayout />,
+    children: [{ path: '/', element: <HomePage /> }],
   },
+  { path: '/signin', element: <SignIn /> },
+  { path: '/signup', element: <SignUp /> },
 ])
 
 export function Router() {

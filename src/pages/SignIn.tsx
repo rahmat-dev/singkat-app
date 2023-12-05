@@ -1,11 +1,5 @@
-import { Title } from '@mantine/core'
-import { Link } from 'react-router-dom'
+import AuthenticationForm from '~/components/form/AuthenticationForm'
 
 export default function SignIn() {
-  return (
-    <div>
-      <Title>SignIn</Title>
-      <Link to="/">Go to homepage</Link>
-    </div>
-  )
+  return <AuthenticationForm />
 }

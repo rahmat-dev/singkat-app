@@ -1,5 +1,6 @@
 import {
   ActionIcon,
+  Anchor,
   Button,
   Card,
   Flex,
@@ -17,10 +18,9 @@ export default function HomePage() {
     <Stack mt={80}>
       <TextInput
         placeholder="Type or paste your URL"
-        radius="xl"
         size="md"
         rightSection={
-          <ActionIcon size="lg" radius="xl">
+          <ActionIcon size="lg">
             <IconLink size={20} />
           </ActionIcon>
         }
@@ -32,13 +32,13 @@ export default function HomePage() {
         </Text>
         <Card withBorder>
           <Flex gap={4}>
-            <Text
+            <Anchor
               component={Link}
               to="https://www.singkat.xyz/demo-kedaikito"
               target="_blank"
+              c="black"
               fw={500}
               size="lg"
-              td="underline"
               style={{
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
@@ -46,11 +46,11 @@ export default function HomePage() {
               }}
             >
               singkat.xyz/demo-kedaikito
-            </Text>
+            </Anchor>
             <CopyButton value="singkat.xyz/demo-kedaikito" />
           </Flex>
           <Flex gap={4}>
-            <Text
+            <Anchor
               component={Link}
               to="https://www.youtube.com/watch?v=so19RZs_DTY"
               target="_blank"
@@ -63,7 +63,7 @@ export default function HomePage() {
               }}
             >
               https://www.youtube.com/watch?v=so19RZs_DTY
-            </Text>
+            </Anchor>
             <CopyButton value="https://www.youtube.com/watch?v=so19RZs_DTY" />
           </Flex>
           <Group gap="xs" mt="md">
