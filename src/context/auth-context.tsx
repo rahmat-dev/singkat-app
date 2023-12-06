@@ -1,4 +1,3 @@
-/* eslint-disable react-refresh/only-export-components */
 import {
   createUserWithEmailAndPassword,
   signOut as logout,
@@ -14,12 +13,7 @@ import {
   useState,
 } from 'react'
 import { auth } from '~/lib/firebase'
-
-export interface User {
-  id: string
-  name: string
-  email: string
-}
+import type { User } from '~/types'
 
 const AuthContext = createContext<{
   user: User | null
@@ -62,7 +56,6 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
       setIsLoading(true)
 
       if (_user) {
-        console.log({ _user })
         setUser(() => ({
           id: _user.uid,
           name: _user.displayName!,

@@ -1,85 +1,97 @@
+import { ActionIcon, Stack, TextInput } from '@mantine/core'
+import { useForm } from '@mantine/form'
+import { IconLink } from '@tabler/icons-react'
 import {
-  ActionIcon,
-  Anchor,
-  Button,
-  Card,
-  Flex,
-  Group,
-  Stack,
-  Text,
-  TextInput,
-} from '@mantine/core'
-import { IconLink, IconPencil, IconTrash } from '@tabler/icons-react'
-import { Link } from 'react-router-dom'
-import CopyButton from '~/components/button/copy-button'
+  addDoc,
+  collection,
+  onSnapshot,
+  orderBy,
+  query,
+  where,
+} from 'firebase/firestore'
+import { nanoid } from 'nanoid'
+import { useEffect, useState } from 'react'
+import { toast } from 'sonner'
+import CardLinks from '~/components/homepage/card-links'
+import { useAuth } from '~/context/auth-context'
+import { db } from '~/lib/firebase'
+import type { Link } from '~/types'
+
+interface FormValues {
+  url: string
+}
 
 export default function HomePage() {
+  const [isLoading, setIsLoading] = useState(false)
+  const [links, setLinks] = useState<{
+    isLoading: boolean
+    data: Link[]
+  }>({ isLoading: true, data: [] })
+  const { user } = useAuth()
+  const form = useForm<FormValues>({
+    initialValues: { url: '' },
+    validate: {
+      url: val => (!val ? 'URL is required' : null),
+    },
+  })
+
+  const generateShortUrl = async (values: FormValues) => {
+    setIsLoading(true)
+    try {
+      const shortUrl = nanoid(8)
+      const now = new Date()
+      await addDoc(collection(db, 'links'), {
+        originalUrl: values.url,
+        shortUrl,
+        userId: user?.id,
+        createdAt: now,
+        updatedAt: now,
+      } as Link)
+      toast.success('Url generated successfully')
+      form.reset()
+      setIsLoading(false)
+    } catch (error: any) {
+      toast.error(error.message)
+      setIsLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    const q = query(
+      collection(db, 'links'),
+      where('userId', '==', user?.id),
+      orderBy('createdAt', 'desc'),
+    )
+    const unsubscribe = onSnapshot(q, querySnapshot => {
+      const data: Link[] = []
+      querySnapshot.forEach(doc => {
+        data.push(doc.data() as Link)
+      })
+      setLinks({ data, isLoading: false })
+    })
+
+    return () => {
+      unsubscribe()
+    }
+  }, [])
+
   return (
     <Stack mt={80}>
-      <TextInput
-        placeholder="Type or paste your URL"
-        size="md"
-        rightSection={
-          <ActionIcon size="lg">
-            <IconLink size={20} />
-          </ActionIcon>
-        }
-      />
+      <form onSubmit={form.onSubmit(generateShortUrl)}>
+        <TextInput
+          placeholder="Type or paste your URL"
+          size="md"
+          type="url"
+          rightSection={
+            <ActionIcon size="lg" type="submit" loading={isLoading}>
+              <IconLink size={20} />
+            </ActionIcon>
+          }
+          {...form.getInputProps('url')}
+        />
+      </form>
 
-      <Stack gap="xs" mt="xl">
-        <Text size="xl" fw="bold">
-          Your Links
-        </Text>
-        <Card withBorder>
-          <Flex gap={4}>
-            <Anchor
-              component={Link}
-              to="https://www.singkat.xyz/demo-kedaikito"
-              target="_blank"
-              c="black"
-              fw={500}
-              size="lg"
-              style={{
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                whiteSpace: 'nowrap',
-              }}
-            >
-              singkat.xyz/demo-kedaikito
-            </Anchor>
-            <CopyButton value="singkat.xyz/demo-kedaikito" />
-          </Flex>
-          <Flex gap={4}>
-            <Anchor
-              component={Link}
-              to="https://www.youtube.com/watch?v=so19RZs_DTY"
-              target="_blank"
-              c="gray"
-              size="sm"
-              style={{
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                whiteSpace: 'nowrap',
-              }}
-            >
-              https://www.youtube.com/watch?v=so19RZs_DTY
-            </Anchor>
-            <CopyButton value="https://www.youtube.com/watch?v=so19RZs_DTY" />
-          </Flex>
-          <Group gap="xs" mt="md">
-            <Button
-              size="xs"
-              color="gray"
-              leftSection={<IconPencil size={16} />}
-            >
-              Edit
-            </Button>
-            <Button size="xs" color="red" leftSection={<IconTrash size={16} />}>
-              Delete
-            </Button>
-          </Group>
-        </Card>
-      </Stack>
+      <CardLinks isLoading={links.isLoading} links={links.data} />
     </Stack>
   )
 }
