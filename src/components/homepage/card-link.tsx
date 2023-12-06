@@ -4,10 +4,6 @@ import { Link } from 'react-router-dom'
 import CopyButton from '~/components/button/copy-button'
 import type { Link as ILink } from '~/types'
 
-export const renderShortUrl = (shortUrl: string) => {
-  return shortUrl.replace('http://', '').replace('https://', '')
-}
-
 export const CardLinkSkeleton = () => (
   <Card withBorder>
     <Skeleton h={24} w={180} maw="100%" />
@@ -31,7 +27,7 @@ export const CardLink = ({ link, onEdit, onDelete }: CardLinkProps) => {
       <Flex gap={4}>
         <Anchor
           component={Link}
-          to={link.shortUrl}
+          to={`${window.location.origin}/${link.shortUrl}`}
           target="_blank"
           c="black"
           fw={500}
@@ -42,13 +38,9 @@ export const CardLink = ({ link, onEdit, onDelete }: CardLinkProps) => {
             whiteSpace: 'nowrap',
           }}
         >
-          {renderShortUrl(`${import.meta.env.VITE_APP_URL}/${link.shortUrl}`)}
+          {`${window.location.host}/${link.shortUrl}`}
         </Anchor>
-        <CopyButton
-          value={renderShortUrl(
-            `${import.meta.env.VITE_APP_URL}/${link.shortUrl}`,
-          )}
-        />
+        <CopyButton value={`${window.location.host}/${link.shortUrl}`} />
       </Flex>
       <Flex gap={4}>
         <Anchor
