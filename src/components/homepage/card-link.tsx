@@ -19,13 +19,19 @@ export const CardLinkSkeleton = () => (
   </Card>
 )
 
-export const CardLink = ({ shortUrl, originalUrl }: ILink) => {
+interface CardLinkProps {
+  link: ILink
+  onEdit: (link: ILink) => void
+  onDelete: (link: ILink) => void
+}
+
+export const CardLink = ({ link, onEdit, onDelete }: CardLinkProps) => {
   return (
     <Card withBorder>
       <Flex gap={4}>
         <Anchor
           component={Link}
-          to={shortUrl}
+          to={link.shortUrl}
           target="_blank"
           c="black"
           fw={500}
@@ -36,16 +42,18 @@ export const CardLink = ({ shortUrl, originalUrl }: ILink) => {
             whiteSpace: 'nowrap',
           }}
         >
-          {renderShortUrl(`${import.meta.env.VITE_APP_URL}/${shortUrl}`)}
+          {renderShortUrl(`${import.meta.env.VITE_APP_URL}/${link.shortUrl}`)}
         </Anchor>
         <CopyButton
-          value={renderShortUrl(`${import.meta.env.VITE_APP_URL}/${shortUrl}`)}
+          value={renderShortUrl(
+            `${import.meta.env.VITE_APP_URL}/${link.shortUrl}`,
+          )}
         />
       </Flex>
       <Flex gap={4}>
         <Anchor
           component={Link}
-          to={originalUrl}
+          to={link.originalUrl}
           target="_blank"
           c="gray"
           size="sm"
@@ -55,15 +63,25 @@ export const CardLink = ({ shortUrl, originalUrl }: ILink) => {
             whiteSpace: 'nowrap',
           }}
         >
-          {originalUrl}
+          {link.originalUrl}
         </Anchor>
-        <CopyButton value={originalUrl} />
+        <CopyButton value={link.originalUrl} />
       </Flex>
       <Group gap="xs" mt="md">
-        <Button size="xs" color="gray" leftSection={<IconPencil size={16} />}>
+        <Button
+          size="xs"
+          color="gray"
+          leftSection={<IconPencil size={16} />}
+          onClick={() => onEdit(link)}
+        >
           Edit
         </Button>
-        <Button size="xs" color="red" leftSection={<IconTrash size={16} />}>
+        <Button
+          size="xs"
+          color="red"
+          leftSection={<IconTrash size={16} />}
+          onClick={() => onDelete(link)}
+        >
           Delete
         </Button>
       </Group>

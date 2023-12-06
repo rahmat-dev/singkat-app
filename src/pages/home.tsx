@@ -46,7 +46,7 @@ export default function HomePage() {
         userId: user?.id,
         createdAt: now,
         updatedAt: now,
-      } as Link)
+      } as Omit<Link, 'id'>)
       toast.success('Url generated successfully')
       form.reset()
       setIsLoading(false)
@@ -65,7 +65,7 @@ export default function HomePage() {
     const unsubscribe = onSnapshot(q, querySnapshot => {
       const data: Link[] = []
       querySnapshot.forEach(doc => {
-        data.push(doc.data() as Link)
+        data.push({ ...doc.data(), id: doc.id } as Link)
       })
       setLinks({ data, isLoading: false })
     })

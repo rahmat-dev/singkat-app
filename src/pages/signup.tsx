@@ -17,7 +17,7 @@ export default function SignUp() {
     } catch (error: any) {
       toast.error(
         error.code === 'auth/email-already-in-use'
-          ? 'Email has already registered'
+          ? 'Email is already registered'
           : error.message,
       )
       setIsLoading(false)

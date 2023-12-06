@@ -13,6 +13,7 @@
     "@mantine/core": "^7.3.0",
     "@mantine/form": "^7.3.0",
     "@mantine/hooks": "^7.3.0",
+    "@mantine/modals": "^7.3.0",
     "@tabler/icons-react": "^2.42.0",
     "firebase": "^10.7.0",
     "nanoid": "^5.0.4",

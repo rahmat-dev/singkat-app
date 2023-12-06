@@ -5,6 +5,7 @@ export interface User {
 }
 
 export interface Link {
+  id: string
   originalUrl: string
   shortUrl: string
   userId: string
