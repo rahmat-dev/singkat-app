@@ -58,7 +58,11 @@ export default function Header() {
               </UnstyledButton>
             </Menu.Target>
             <Menu.Dropdown>
-              <Menu.Item leftSection={<IconLock size={18} />}>
+              <Menu.Item
+                component={Link}
+                to="/change-password"
+                leftSection={<IconLock size={18} />}
+              >
                 Change Password
               </Menu.Item>
               <Menu.Item

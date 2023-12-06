@@ -10,6 +10,7 @@ import NotFound from '~/components/errors/not-found'
 import AuthLayout from '~/components/layout/auth-layout'
 import MainLayout from '~/components/layout/main-layout'
 import { db } from '~/lib/firebase'
+import ChangePassword from '~/pages/change-password'
 import HomePage from '~/pages/home'
 import SignIn from '~/pages/signin'
 import SignUp from '~/pages/signup'
@@ -28,7 +29,10 @@ const redirectToOriginalUrl: LoaderFunction = async ({ params }) => {
 const router = createBrowserRouter([
   {
     element: <MainLayout />,
-    children: [{ path: '/', element: <HomePage /> }],
+    children: [
+      { path: '/', element: <HomePage /> },
+      { path: '/change-password', element: <ChangePassword /> },
+    ],
   },
   {
     path: '/:shortUrl',
