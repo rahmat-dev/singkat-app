@@ -5,30 +5,24 @@ import AuthenticationForm, {
 } from '~/components/form/authentication-form'
 import { useAuth } from '~/context/auth-context'
 
-export default function SignUp() {
-  const { signUp } = useAuth()
+export default function SignIn() {
+  const { signIn } = useAuth()
   const [isLoading, setIsLoading] = useState(false)
 
-  const handleSignUp = async (values: FormValues) => {
+  const handleSignIn = async (values: FormValues) => {
     setIsLoading(true)
     try {
-      await signUp(values.name!, values.email, values.password)
+      await signIn(values.email, values.password)
       setIsLoading(false)
     } catch (error: any) {
       toast.error(
-        error.code === 'auth/email-already-in-use'
-          ? 'Email has already registered'
+        error.code === 'auth/invalid-credential'
+          ? 'Invalid email or password'
           : error.message,
       )
       setIsLoading(false)
     }
   }
 
-  return (
-    <AuthenticationForm
-      type="signup"
-      onSubmit={handleSignUp}
-      isLoading={isLoading}
-    />
-  )
+  return <AuthenticationForm onSubmit={handleSignIn} isLoading={isLoading} />
 }

@@ -11,8 +11,22 @@ import { IconLock, IconLogout } from '@tabler/icons-react'
 import { Link } from 'react-router-dom'
 
 import classes from '~/components/header/header.module.css'
+import { useAuth } from '~/context/auth-context'
+
+const renderAvatarInitial = (name?: string) => {
+  if (!name) return ''
+
+  return name
+    .split(' ')
+    .slice(0, 2)
+    .map(n => n.charAt(0))
+    .join('')
+    .toUpperCase()
+}
 
 export default function Header() {
+  const { user, signOut } = useAuth()
+
   return (
     <header className={classes.header}>
       <Container size="md">
@@ -33,13 +47,13 @@ export default function Header() {
                 <Group>
                   <Stack gap={0} ta="right">
                     <Text size="xs" fw={500}>
-                      John Doe
+                      {user?.name}
                     </Text>
                     <Text size="xs" c="gray">
-                      johndoe@gmail.com
+                      {user?.email}
                     </Text>
                   </Stack>
-                  <Avatar>JD</Avatar>
+                  <Avatar>{renderAvatarInitial(user?.name)}</Avatar>
                 </Group>
               </UnstyledButton>
             </Menu.Target>
@@ -47,7 +61,10 @@ export default function Header() {
               <Menu.Item leftSection={<IconLock size={18} />}>
                 Change Password
               </Menu.Item>
-              <Menu.Item leftSection={<IconLogout size={18} />}>
+              <Menu.Item
+                leftSection={<IconLogout size={18} />}
+                onClick={signOut}
+              >
                 Logout
               </Menu.Item>
             </Menu.Dropdown>
